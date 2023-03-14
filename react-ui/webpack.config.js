@@ -31,8 +31,8 @@ module.exports = {
                 exclude: /node_modules/, // Where not to search
                 use: ['babel-loader'], // Array of loaders
             },
-            { // Rule for styles
-                test: /\.s(a|c)ss$/,
+            { // Rule for styles modules
+                test: /\.module\.s(a|c)ss$/,
                 exclude: /node_modules/,
                 use: [
                     production ? MiniCssExtractPlugin.loader : 'style-loader',
@@ -51,6 +51,22 @@ module.exports = {
                     },
                 ],
             },
+            { // Rule for styles
+                test: /\.s(a|c)ss$/,
+                exclude: [
+                    /\.module.(s(a|c)ss)$/,
+                    /node_modules/,
+                ],
+                use: [
+                    production ? MiniCssExtractPlugin.loader : 'style-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: !production,
+                        },
+                    },
+                ],
+            },
         ],
     },
     resolve: {
@@ -61,12 +77,15 @@ module.exports = {
         new HtmlWebpackPlugin({ // Connects built JS with HTML file
             title: 'The Sun News',
             template: './src/index.html',
-            favicon: './public/sun-favicon-round.png',
+            favicon: './src/assets/icons/sun-favicon-round.png',
         }),
         new MiniCssExtractPlugin({
             filename: production ?
                 '[name].[contenthash].bundle.css' :
                 '[name].bundle.css',
+            chunkFilename: production ?
+                '[id].[contenthash].bundle.css' :
+                '[id].bundle.css',
         }),
     ],
     devServer: {
