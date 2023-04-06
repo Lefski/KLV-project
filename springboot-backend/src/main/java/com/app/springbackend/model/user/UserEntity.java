@@ -64,9 +64,8 @@ public class UserEntity implements UserDetails {
     private UserPassportEntity userPassport;
 
     /**
-     * Method to get list of all authorities
-     *
-     * @return list of authorities
+     * <p>Method to get list of all authorities.</p>
+     * @return List of authorities.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
