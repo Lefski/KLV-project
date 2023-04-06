@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("")
+                .requestMatchers("/api/v1/auth/**") // TODO: Add the path to the login endpoint here
                 .permitAll()
                 .anyRequest()
                 .authenticated()
