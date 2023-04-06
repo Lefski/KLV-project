@@ -63,6 +63,11 @@ public class UserEntity implements UserDetails {
     @PrimaryKeyJoinColumn
     private UserPassportEntity userPassport;
 
+    /**
+     * Method to get list of all authorities
+     *
+     * @return list of authorities
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(userRole.name()));
