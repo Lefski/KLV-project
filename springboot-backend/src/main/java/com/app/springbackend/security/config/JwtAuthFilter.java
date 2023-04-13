@@ -31,6 +31,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        if (request.getServletPath().contains("/api/v1/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        } // TODO: Add the path to the login endpoint here
+
         final String authHeader = request.getHeader("Authorization");
 
         // Check for premature exit
