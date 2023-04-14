@@ -26,5 +26,9 @@ hs_err_pid*
 cockroach-data
 db
 
+# dotenv environment variable files
 .env
-.env.test
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
