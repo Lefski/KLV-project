@@ -1,9 +1,13 @@
-FROM node:18-alpine3.17
-WORKDIR /react-ui
-ENV PATH /react-ui/node_modules/.bin:$PATH
-COPY package.json .
-COPY package-lock.json .
-RUN npm install # -g npm@8.9.0
+FROM node:latest AS build
+WORKDIR /app-client
+
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+RUN npm ci
+
 COPY . .
-EXPOSE 3001
-CMD ["npm", "run", "dev"]
+RUN npm run build
+
+FROM httpd:alpine
+WORKDIR /var/www/html
+COPY --from=build /app-client .
