@@ -1,11 +1,10 @@
-FROM node:latest AS build
+FROM node:alpine AS build
 WORKDIR /app-client
 
-COPY package.json package.json
-COPY package-lock.json package-lock.json
+COPY package.json package-lock.json ./
 RUN npm ci
 
-COPY . .
+COPY . ./
 RUN npm run build
 
 FROM httpd:alpine
