@@ -1,12 +1,17 @@
 FROM node:alpine AS build
 WORKDIR /app-client
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 
-COPY . ./
+COPY . .
 RUN npm run build
 
 FROM httpd:alpine
-WORKDIR /var/www/html
-COPY --from=build /app-client .
+
+COPY --from=build /app-client/build /usr/local/apache2/htdocs/
+
+EXPOSE 80
+
+CMD ["httpd", "-D", "FOREGROUND"]
