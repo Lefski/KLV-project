@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // Indicates in which dev env we are - dev/prod
-const production = process.env.NODE_ENV == 'production';
+const production = process.env.NODE_ENV === 'production';
 
 // Webpack parameters
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
     },
     output: {
          // Directory to export bundle in:
-        path: path.resolve(__dirname, './dist'),
+        path: path.resolve(__dirname, './build'),
 
         // With each new build hash will be added
         // to filename for better loading speed:

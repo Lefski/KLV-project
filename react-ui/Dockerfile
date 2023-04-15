@@ -1,9 +1,17 @@
-FROM node:18-alpine3.17
-WORKDIR /react-ui
-ENV PATH /react-ui/node_modules/.bin:$PATH
+FROM node:alpine AS build
+WORKDIR /app-client
+
 COPY package.json .
 COPY package-lock.json .
-RUN npm install # -g npm@8.9.0
+RUN npm install
+
 COPY . .
-EXPOSE 3001
-CMD ["npm", "run", "dev"]
+RUN npm run build
+
+FROM httpd:alpine
+
+COPY --from=build /app-client/build /usr/local/apache2/htdocs/
+
+EXPOSE 80
+
+CMD ["httpd", "-D", "FOREGROUND"]

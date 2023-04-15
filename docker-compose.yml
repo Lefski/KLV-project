@@ -1,17 +1,69 @@
-version: '3'
+version: '3.9'
+
+
 services:
 
-  spring-back-end:
-    image: "klv-project/springboot-backend:0.0.1"
-    container_name: klv-backend
+#  apache:
+#    image: httpd:2.4
+#    volumes:
+#      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+#      - ./src:/usr/local/apache2/htdocs
+#    ports:
+#      - 80:80
+
+  # App backend service
+  app-server:
+    build:
+      context: springboot-backend # Use an image built from the specified dockerfile in the `polling-app-server` directory.
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - '${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}'
+    restart: always
+    depends_on:
+      - db # This service depends on mysql.
     environment:
-      - SPRING.PROFILES.ACTIVE=default
-  react-front-end:
-    image: "klv-project/react-ui:0.0.1"
-    container_name: klv-ui
+      SPRING_DATASOURCE_URL: $SPRING_DATASOURCE_URL
+      SPRING_DATASOURCE_USERNAME: $MYSQLDB_USER
+      SPRING_DATASOURCE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+    networks:
+      - backend
+      - frontend
+
+  # App frontend service
+  app-client:
+    build:
+      context: react-ui # Use an image built from the specified dockerfile in the `polling-app-client` directory.
+      dockerfile: Dockerfile
+      args:
+        API_BASE_URL: 'http://localhost:${SPRING_DOCKER_PORT}/api'
     ports:
-      - "3001:3001"
-    links:
-      - spring-back-end
+      - '${REACT_LOCAL_PORT}:${REACT_DOCKER_PORT}'
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend
+
+  # Database service (Mysql)
+  db:
+    image: mysql:latest
+    ports:
+      - '${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}'
+    restart: always
+    environment:
+      MYSQL_DATABASE: $MYSQLDB_SCHEMA
+      MYSQL_USER: $MYSQLDB_USER
+      MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+
+
+volumes:
+  db-data:
+
+
+networks:
+  backend:
+  frontend:  
