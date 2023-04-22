@@ -1,17 +1,76 @@
-version: '3'
+version: '3.9'
+
+
 services:
 
-  spring-back-end:
-    image: "klv-project/springboot-backend:0.0.1"
-    container_name: klv-backend
+  # App backend service
+  app-server:
+    container_name: klv-project_app-server
+    build:
+      context: springboot-backend
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - '${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}'
+    restart: no
+    depends_on:
+      app-db:
+        condition: service_healthy
     environment:
-      - SPRING.PROFILES.ACTIVE=default
-  react-front-end:
-    image: "klv-project/react-ui:0.0.1"
-    container_name: klv-ui
+      DB_SCHEMA: $DB_SCHEMA
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_SERVER: klv-project_app-db
+      DB_PORT: $DB_DOCKER_PORT
+    networks:
+      - backend
+      - frontend
+
+  # App frontend service
+  app-client:
+    container_name: klv-project_app-client
+    hostname: sun.klv.com # TODO: Change before deployment
+    build:
+      context: react-ui
+      dockerfile: Dockerfile
+      args:
+        API_BASE_URL: 'http://localhost:${SPRING_DOCKER_PORT}/api'
     ports:
-      - "3001:3001"
-    links:
-      - spring-back-end
+      - '${REACT_LOCAL_PORT}:${REACT_DOCKER_PORT}'
+    restart: no
+    depends_on:
+      - app-server
+    networks:
+      - frontend
+
+  # Database service (Mysql)
+  app-db:
+    container_name: klv-project_app-db
+    build:
+      context: mysql-database
+      dockerfile: Dockerfile
+    ports:
+      - '${DB_LOCAL_PORT}:${DB_DOCKER_PORT}'
+    restart: no
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-u", "root", "-proot" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: $DB_SCHEMA
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+    networks:
+      - backend
+
+
+volumes:
+  db-data:
+
+
+networks:
+  backend:
+  frontend:
