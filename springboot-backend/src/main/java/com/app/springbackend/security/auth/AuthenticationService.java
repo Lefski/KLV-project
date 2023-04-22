@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -20,12 +22,16 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = UserEntity
+        UserEntity user = UserEntity
                 .builder()
                 .username(request.getUsername())
-                .userEmail(request.getEmail())
+                .userEmail(request.getUserEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .userRole(UserRole.USER)
+                .lastLogin(new Timestamp(System.currentTimeMillis()))
+                .dateJoined(new Timestamp(System.currentTimeMillis()))
+                .userUrl(new byte[0])
+                .userImageUrl(new byte[0])
                 .build();
 
         userRepository.save(user);
