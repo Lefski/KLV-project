@@ -5,6 +5,7 @@ import com.app.springbackend.model.user.UserRole;
 import com.app.springbackend.repo.UserRepository;
 import com.app.springbackend.security.config.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +50,7 @@ public class AuthenticationService {
             )
         );
 
-        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(); // TODO: handle exception
+        UserEntity user = userRepository.findByUsername(request.getUsername()).orElseThrow(); // TODO: handle exception
         return AuthenticationResponse
                 .builder()
                 .token(jwtService.generateToken(user))
