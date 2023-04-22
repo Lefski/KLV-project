@@ -1,6 +1,5 @@
 package com.app.springbackend.security.config;
 
-import com.app.springbackend.model.user.UserEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
