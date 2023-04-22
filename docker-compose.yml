@@ -28,6 +28,7 @@ services:
   # App frontend service
   app-client:
     container_name: klv-project_app-client
+    hostname: sun.klv.com # TODO: Change before deployment
     build:
       context: react-ui
       dockerfile: Dockerfile
@@ -44,20 +45,24 @@ services:
   # Database service (Mysql)
   app-db:
     container_name: klv-project_app-db
-    image: mysql:latest
+    build:
+      context: mysql-database
+      dockerfile: Dockerfile
     ports:
       - '${DB_LOCAL_PORT}:${DB_DOCKER_PORT}'
     restart: no
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-u", "root", "-proot" ]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
-    environment:
-      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
     volumes:
       - db-data:/var/lib/mysql
-      - ./db_model/klv_database.sql:/docker-entrypoint-initdb.d/klv_database.sql
+    environment:
+      MYSQL_DATABASE: $DB_SCHEMA
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
     networks:
       - backend
 
