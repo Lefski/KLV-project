@@ -11,6 +11,6 @@ public class TestController {
 
     @GetMapping
     public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Secured endpoint here"); // TODO: Fix 403 error
+        return ResponseEntity.ok("Secured endpoint here");
     }
 }
