@@ -1,11 +1,17 @@
 package com.app.springbackend.model.post;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "sn_category", schema = "klv_database")
 public class CategoryEntity {
@@ -25,7 +31,4 @@ public class CategoryEntity {
 
     @ManyToMany(mappedBy = "categories")
     Set<PostEntity> posts;
-
-//    @OneToMany(mappedBy = "category")
-//    Set<PostCategoriesEntity> posts;
 }

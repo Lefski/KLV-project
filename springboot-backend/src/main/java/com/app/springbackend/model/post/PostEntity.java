@@ -1,12 +1,18 @@
 package com.app.springbackend.model.post;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.Set;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "sn_post", schema = "klv_database")
 public class PostEntity {
@@ -57,7 +63,4 @@ public class PostEntity {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     Set<CategoryEntity> categories;
-
-//    @OneToMany(mappedBy = "post")
-//    Set<PostCategoriesEntity> categories;
 }
