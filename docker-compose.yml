@@ -28,6 +28,7 @@ services:
   # App frontend service
   app-client:
     container_name: klv-project_app-client
+    hostname: sun.klv.com # TODO: Change before deployment
     build:
       context: react-ui
       dockerfile: Dockerfile
