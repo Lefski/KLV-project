@@ -11,7 +11,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN ./mvnw package
+RUN ./mvnw clean package
 
 FROM openjdk:19-alpine
 
