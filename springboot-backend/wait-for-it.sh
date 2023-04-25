@@ -21,7 +21,6 @@ Usage:
 USAGE
     exit 1
 }
-
 wait_for()
 {
     if [[ $WAITFORIT_TIMEOUT -gt 0 ]]; then
