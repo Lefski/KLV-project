@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-backend
+  namespace: klv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-backend
+  template:
+    metadata:
+      labels:
+        app: springboot-backend
+    spec:
+      containers:
+        - name: springboot-backend
+          image: watisluv/klv-springboot-backend:springboot-backend
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_SCHEMA
+              valueFrom:
+                secretKeyRef:
+                  name: klv-db-secrets
+                  key: db-schema
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: klv-db-secrets
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: klv-db-secrets
+                  key: db-password
+            - name: DB_SERVER
+              value: klv-project-app-db
+            - name: DB_PORT
+              value: "3306"
