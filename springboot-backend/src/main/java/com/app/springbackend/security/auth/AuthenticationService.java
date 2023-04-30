@@ -1,11 +1,10 @@
 package com.app.springbackend.security.auth;
 
 import com.app.springbackend.model.user.UserEntity;
-import com.app.springbackend.model.user.UserRole;
+import com.app.springbackend.model.user.EUserRole;
 import com.app.springbackend.repo.UserRepository;
 import com.app.springbackend.security.config.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +27,7 @@ public class AuthenticationService {
                 .username(request.getUsername())
                 .userEmail(request.getUserEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .userRole(UserRole.USER)
+                .userRole(EUserRole.USER)
                 .lastLogin(new Timestamp(System.currentTimeMillis()))
                 .dateJoined(new Timestamp(System.currentTimeMillis()))
                 .userUrl(new byte[0])

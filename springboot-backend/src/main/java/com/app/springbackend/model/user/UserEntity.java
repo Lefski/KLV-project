@@ -41,7 +41,7 @@ public class UserEntity implements UserDetails {
     @Basic
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private EUserRole userRole;
 
     @Basic
     @Column(name = "last_login")

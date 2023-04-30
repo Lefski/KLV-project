@@ -1,6 +1,6 @@
 package com.app.springbackend.model.user;
 
-public enum UserRole {
+public enum EUserRole {
 
     USER,
     MODERATOR,
