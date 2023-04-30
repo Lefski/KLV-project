@@ -111,6 +111,41 @@ CREATE TABLE `sn_user_passport` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sn_user_role`
+--
+
+DROP TABLE IF EXISTS `sn_user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sn_user_role` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `role_name` enum('USER','MODERATOR','ADMIN') NOT NULL DEFAULT 'USER' COMMENT 'Could be either USER, MODERATOR or ADMIN',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sn_user_roles`
+--
+
+DROP TABLE IF EXISTS `sn_user_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sn_user_roles` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `role_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sn_user_roles_role_id_foreign` (`role_id`),
+  KEY `sn_user_roles_user_id_foreign` (`user_id`),
+  CONSTRAINT `sn_user_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `sn_user_role` (`id`),
+  CONSTRAINT `sn_user_roles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `sn_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
