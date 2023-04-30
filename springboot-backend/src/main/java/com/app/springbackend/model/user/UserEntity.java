@@ -59,8 +59,8 @@ public class UserEntity implements UserDetails {
     @Column(name = "user_image_url")
     private byte[] userImageUrl;
 
-    @OneToOne(mappedBy = "User", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne
+    @MapsId
     private UserPassportEntity userPassport;
 
     /**

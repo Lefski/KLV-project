@@ -43,9 +43,4 @@ public class UserPassportEntity {
     @Basic
     @Column(name = "zip_code")
     private String zipCode;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity User;
 }
