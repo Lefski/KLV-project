@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `klv_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `klv_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `klv_database`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: klv_database
+-- Database: klv_database
 -- ------------------------------------------------------
 -- Server version	8.0.32
 
@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `sn_post`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sn_post` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `post_author` bigint unsigned NOT NULL,
+  `post_author_id` bigint unsigned NOT NULL,
   `post_status` varchar(255) NOT NULL,
   `date_posted` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
@@ -36,8 +36,8 @@ CREATE TABLE `sn_post` (
   `post_type` varchar(255) NOT NULL,
   `post_image_url` blob NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `sn_post_post_author_foreign` (`post_author`),
-  CONSTRAINT `sn_post_post_author_foreign` FOREIGN KEY (`post_author`) REFERENCES `sn_user` (`id`)
+  KEY `sn_post_post_author_id_foreign` (`post_author_id`),
+  CONSTRAINT `sn_post_post_author_id_foreign` FOREIGN KEY (`post_author_id`) REFERENCES `sn_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -87,15 +87,13 @@ CREATE TABLE `sn_user` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
-  `user_role` enum('USER','ADMIN') NOT NULL DEFAULT 'USER' COMMENT 'Admin is able to delete every post in blogs.',
   `last_login` datetime NOT NULL,
   `date_joined` datetime NOT NULL,
-  `user_url` blob NOT NULL,
   `user_image_url` blob NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sn_user_username_unique` (`username`),
   KEY `sn_user_username_user_email_index` (`username`,`user_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,12 +104,12 @@ DROP TABLE IF EXISTS `sn_user_passport`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sn_user_passport` (
-  `user_id` bigint NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
   `birth_date` date DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
-  `first_name` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `phone_number` varchar(255) DEFAULT NULL,
   `zip_code` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   CONSTRAINT `sn_user_passport_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `sn_user` (`id`)
@@ -162,4 +160,4 @@ CREATE TABLE `sn_user_roles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-22 13:53:46
+-- Dump completed on 2023-04-30 21:09:55
