@@ -18,21 +18,6 @@ USE `klv_database`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `sn_category`
---
-
-DROP TABLE IF EXISTS `sn_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sn_category` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `category_name` varchar(255) NOT NULL,
-  `category_description` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `sn_post`
 --
 
@@ -67,6 +52,21 @@ CREATE TABLE `sn_post_categories` (
   `post_id` bigint NOT NULL,
   `category_id` bigint NOT NULL,
   PRIMARY KEY (`post_id`,`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sn_post_category`
+--
+
+DROP TABLE IF EXISTS `sn_post_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sn_post_category` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(255) NOT NULL,
+  `category_description` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
