@@ -1,6 +1,10 @@
-package com.app.springbackend.security.auth;
+package com.app.springbackend.controller;
 
 
+import com.app.springbackend.security.auth.AuthenticationRequest;
+import com.app.springbackend.security.auth.AuthenticationResponse;
+import com.app.springbackend.security.auth.AuthenticationService;
+import com.app.springbackend.security.auth.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
