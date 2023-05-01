@@ -1,4 +1,4 @@
-package com.app.springbackend.security.auth;
+package com.app.springbackend.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class RegisterRequest {
 
-    private String username, password;
+    private String username, userEmail, password;
 }
