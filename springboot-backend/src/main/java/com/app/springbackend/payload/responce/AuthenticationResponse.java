@@ -1,4 +1,4 @@
-package com.app.springbackend.security.auth;
+package com.app.springbackend.payload.responce;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
