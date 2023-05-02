@@ -2,18 +2,14 @@ package com.app.springbackend.model.post;
 
 import com.app.springbackend.model.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 
-@Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
