@@ -2,7 +2,8 @@ package com.app.springbackend.payload.request;
 
 import lombok.*;
 
-@Data
+import java.util.Set;
+
 @Builder
 @Getter
 @Setter
@@ -11,4 +12,6 @@ import lombok.*;
 public class RegisterRequest {
 
     private String username, userEmail, password;
+
+    private Set<String> role;
 }
