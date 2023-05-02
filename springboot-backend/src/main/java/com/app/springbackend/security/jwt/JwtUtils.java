@@ -77,8 +77,8 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(Authentication authentication) {
+        return generateToken(new HashMap<>(), (UserDetailsImpl) authentication.getPrincipal());
     }
 
     /**
@@ -89,13 +89,13 @@ public class JwtUtils {
      */
     public String generateToken(
         Map<String, Object> extraClaims,
-        UserDetails userDetails
+        UserDetailsImpl userDetails
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME_IN_MILLIS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
