@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `klv_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `klv_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `klv_database`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
@@ -125,10 +125,20 @@ DROP TABLE IF EXISTS `sn_user_role`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sn_user_role` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `role_name` enum('USER','MODERATOR','ADMIN') NOT NULL DEFAULT 'USER' COMMENT 'Could be either USER, MODERATOR or ADMIN',
+  `role_name` enum('ROLE_USER','ROLE_MODERATOR','ROLE_ADMIN') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sn_user_role`
+--
+
+LOCK TABLES `sn_user_role` WRITE;
+/*!40000 ALTER TABLE `sn_user_role` DISABLE KEYS */;
+INSERT INTO `sn_user_role` VALUES (1,'ROLE_USER'),(2,'ROLE_MODERATOR'),(3,'ROLE_ADMIN');
+/*!40000 ALTER TABLE `sn_user_role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `sn_user_roles`
@@ -149,7 +159,6 @@ CREATE TABLE `sn_user_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -160,4 +169,4 @@ CREATE TABLE `sn_user_roles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-30 21:09:55
+-- Dump completed on 2023-05-02 20:08:50
