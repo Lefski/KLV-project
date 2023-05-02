@@ -3,7 +3,7 @@ package com.app.springbackend.model.user;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Objects;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -23,4 +23,7 @@ public class UserRole {
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name", nullable = false)
     private EUserRole roleName;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 }

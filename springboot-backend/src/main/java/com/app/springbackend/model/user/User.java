@@ -46,14 +46,13 @@ public class User {
     @Column(name = "user_image_url")
     private byte[] userImageUrl;
 
-    @OneToOne
-    @MapsId
+    @OneToOne(mappedBy = "user")
     private UserPassport userPassport;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "sn_user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")

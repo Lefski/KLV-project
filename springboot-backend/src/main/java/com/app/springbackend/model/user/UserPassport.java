@@ -42,4 +42,9 @@ public class UserPassport {
     @Basic
     @Column(name = "zip_code")
     private String zipCode;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 }
