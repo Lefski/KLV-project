@@ -1,10 +1,12 @@
 package com.app.springbackend.security.jwt;
 
+import com.app.springbackend.security.services.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,7 @@ import java.util.function.Function;
  The token's payload contains user details and any additional claims provided by the client.
  */
 @Service
-public class JwtService {
+public class JwtUtils {
 
     private static final String SIGN_KEY =
             "423F4528482B4D6251655468576D5A7134743677397A24432646294A404E6352";
