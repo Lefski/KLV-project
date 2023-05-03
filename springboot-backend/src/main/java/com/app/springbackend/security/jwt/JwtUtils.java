@@ -28,7 +28,7 @@ public class JwtUtils {
     private static final String SIGN_KEY =
             "423F4528482B4D6251655468576D5A7134743677397A24432646294A404E6352";
 
-    private static final Integer TOKEN_EXPIRATION_TIME_IN_MILLIS = 1000 * 60 * 60 * 24;
+    private static final Integer TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60 * 24;
 
     /**
      Extracts the username from the JWT token.
@@ -96,7 +96,7 @@ public class JwtUtils {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME_IN_MILLIS))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
