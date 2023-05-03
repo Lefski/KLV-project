@@ -1,6 +1,7 @@
 package com.app.springbackend.security.jwt;
 
 import com.app.springbackend.security.services.UserDetailsImpl;
+import com.app.springbackend.security.services.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -82,6 +82,10 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String generateToken(UserDetailsImpl userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
+    }
+
     public String generateToken(Authentication authentication) {
         return generateToken(new HashMap<>(), (UserDetailsImpl) authentication.getPrincipal());
     }
@@ -109,10 +113,9 @@ public class JwtUtils {
     /**
      Checks whether a given JWT token is valid for a specific user.
      @param token the JWT token to validate
-     @param userDetails the user details associated with the token
      @return true if the token is valid for the user, false otherwise.
      */
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getSignInKey())
