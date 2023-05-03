@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,11 @@ import java.util.function.Function;
 @Service
 public class JwtUtils {
 
-    private static final String SIGN_KEY =
-            "423F4528482B4D6251655468576D5A7134743677397A24432646294A404E6352";
+    @Value("${klv.app.sign-key}")
+    private String SIGN_KEY;
 
-    private static final Integer TOKEN_EXPIRATION_TIME_IN_MILLIS = 1000 * 60 * 60 * 24;
+    @Value("${klv.app.token-expiration-ms}")
+    private Integer TOKEN_EXPIRATION_TIME_IN_MILLIS;
 
     /**
      Extracts the username from the JWT token.
