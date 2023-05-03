@@ -1,11 +1,18 @@
 package com.app.springbackend.controller;
 
 
+import com.app.springbackend.model.user.UserRefreshToken;
 import com.app.springbackend.payload.request.AuthenticationRequest;
+import com.app.springbackend.payload.request.TokenRefreshRequest;
 import com.app.springbackend.payload.response.MessageResponse;
+import com.app.springbackend.payload.response.TokenRefreshResponse;
 import com.app.springbackend.repo.UserRepository;
+import com.app.springbackend.exception.TokenRefreshException;
+import com.app.springbackend.security.jwt.JwtUtils;
 import com.app.springbackend.security.services.AuthenticationService;
 import com.app.springbackend.payload.request.RegisterRequest;
+import com.app.springbackend.security.services.TokenRefreshService;
+import com.app.springbackend.security.services.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +25,8 @@ public class AuthenticationController {
 
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final TokenRefreshService tokenRefreshService;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
@@ -43,5 +52,26 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken (
+            @RequestBody TokenRefreshRequest request
+    ) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return tokenRefreshService
+                .findByToken(requestRefreshToken)
+                .map(tokenRefreshService::verifyRefreshTokenExpiration)
+                .map(UserRefreshToken::getUser)
+                .map(user -> ResponseEntity.ok(
+                        new TokenRefreshResponse(
+                                jwtUtils.generateToken(UserDetailsImpl.build(user)),
+                                requestRefreshToken,
+                                "Bearer"
+                        )
+                ))
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database"));
     }
 }
