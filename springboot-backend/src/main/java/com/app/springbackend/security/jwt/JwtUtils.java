@@ -133,22 +133,4 @@ public class JwtUtils {
 
         return false;
     }
-
-    /**
-     Checks whether a given JWT token has expired.
-     @param token the JWT token to check.
-     @return true if the token has expired, false otherwise.
-     */
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    /**
-     Extracts the expiration date from a JWT token.
-     @param token the JWT token to extract the expiration date from.
-     @return the expiration date of the token.
-     */
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
 }
