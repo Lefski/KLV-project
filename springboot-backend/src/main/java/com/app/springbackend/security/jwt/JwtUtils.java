@@ -1,10 +1,13 @@
-package com.app.springbackend.security.config;
+package com.app.springbackend.security.jwt;
 
+import com.app.springbackend.security.services.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +24,13 @@ import java.util.function.Function;
  The token's payload contains user details and any additional claims provided by the client.
  */
 @Service
-public class JwtService {
+public class JwtUtils {
 
-    private static final String SIGN_KEY =
-            "423F4528482B4D6251655468576D5A7134743677397A24432646294A404E6352";
+    @Value("${klv.app.sign-key}")
+    private String SIGN_KEY;
 
-    private static final Integer TOKEN_EXPIRATION_TIME_IN_MILLIS = 1000 * 60 * 60 * 24;
+    @Value("${klv.app.token-expiration-ms}")
+    private Integer TOKEN_EXPIRATION_TIME_IN_MILLIS;
 
     /**
      Extracts the username from the JWT token.
@@ -75,8 +79,8 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(Authentication authentication) {
+        return generateToken(new HashMap<>(), (UserDetailsImpl) authentication.getPrincipal());
     }
 
     /**
@@ -87,13 +91,13 @@ public class JwtService {
      */
     public String generateToken(
         Map<String, Object> extraClaims,
-        UserDetails userDetails
+        UserDetailsImpl userDetails
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME_IN_MILLIS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();

@@ -1,35 +1,34 @@
 package com.app.springbackend.model.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Date;
 
-@Data
+
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "sn_user_passport", schema = "klv_database")
-public class UserPassportEntity {
+public class UserPassport {
 
     @Id
-    @Column(name = "user_id")
-    private Long id;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Basic
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Basic
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Basic
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Basic
@@ -44,8 +43,8 @@ public class UserPassportEntity {
     @Column(name = "zip_code")
     private String zipCode;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity User;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

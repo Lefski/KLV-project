@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `klv_database` /*!40100 DEFAULT CHARACTER SET utf
 USE `klv_database`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: klv_database
+-- Database: klv_database
 -- ------------------------------------------------------
 -- Server version	8.0.32
 
@@ -18,21 +18,6 @@ USE `klv_database`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `sn_category`
---
-
-DROP TABLE IF EXISTS `sn_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sn_category` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `category_name` varchar(255) NOT NULL,
-  `category_description` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `sn_post`
 --
 
@@ -41,7 +26,7 @@ DROP TABLE IF EXISTS `sn_post`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sn_post` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `post_author` bigint unsigned NOT NULL,
+  `post_author_id` bigint unsigned NOT NULL,
   `post_status` varchar(255) NOT NULL,
   `date_posted` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
@@ -51,8 +36,8 @@ CREATE TABLE `sn_post` (
   `post_type` varchar(255) NOT NULL,
   `post_image_url` blob NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `sn_post_post_author_foreign` (`post_author`),
-  CONSTRAINT `sn_post_post_author_foreign` FOREIGN KEY (`post_author`) REFERENCES `sn_user` (`id`)
+  KEY `sn_post_post_author_id_foreign` (`post_author_id`),
+  CONSTRAINT `sn_post_post_author_id_foreign` FOREIGN KEY (`post_author_id`) REFERENCES `sn_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -64,9 +49,29 @@ DROP TABLE IF EXISTS `sn_post_categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sn_post_categories` (
-  `post_id` bigint NOT NULL,
-  `category_id` bigint NOT NULL,
-  PRIMARY KEY (`post_id`,`category_id`)
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `post_id` bigint unsigned NOT NULL,
+  `category_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sn_post_categories_post_id_foreign` (`post_id`),
+  KEY `sn_post_categories_category_id_foreign` (`category_id`),
+  CONSTRAINT `sn_post_categories_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `sn_post_category` (`id`),
+  CONSTRAINT `sn_post_categories_post_id_foreign` FOREIGN KEY (`post_id`) REFERENCES `sn_post` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sn_post_category`
+--
+
+DROP TABLE IF EXISTS `sn_post_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sn_post_category` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(255) NOT NULL,
+  `category_description` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -82,15 +87,13 @@ CREATE TABLE `sn_user` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
-  `user_role` enum('USER','ADMIN') NOT NULL DEFAULT 'USER' COMMENT 'Admin is able to delete every post in blogs.',
   `last_login` datetime NOT NULL,
   `date_joined` datetime NOT NULL,
-  `user_url` blob NOT NULL,
   `user_image_url` blob NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sn_user_username_unique` (`username`),
   KEY `sn_user_username_user_email_index` (`username`,`user_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,16 +104,61 @@ DROP TABLE IF EXISTS `sn_user_passport`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sn_user_passport` (
-  `user_id` bigint NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
   `birth_date` date DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
-  `first_name` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `phone_number` varchar(255) DEFAULT NULL,
   `zip_code` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `sn_user_passport_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `sn_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sn_user_role`
+--
+
+DROP TABLE IF EXISTS `sn_user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sn_user_role` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `role_name` enum('ROLE_USER','ROLE_MODERATOR','ROLE_ADMIN') NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sn_user_role`
+--
+
+LOCK TABLES `sn_user_role` WRITE;
+/*!40000 ALTER TABLE `sn_user_role` DISABLE KEYS */;
+INSERT INTO `sn_user_role` VALUES (1,'ROLE_USER'),(2,'ROLE_MODERATOR'),(3,'ROLE_ADMIN');
+/*!40000 ALTER TABLE `sn_user_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sn_user_roles`
+--
+
+DROP TABLE IF EXISTS `sn_user_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sn_user_roles` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `role_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sn_user_roles_role_id_foreign` (`role_id`),
+  KEY `sn_user_roles_user_id_foreign` (`user_id`),
+  CONSTRAINT `sn_user_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `sn_user_role` (`id`),
+  CONSTRAINT `sn_user_roles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `sn_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -121,4 +169,4 @@ CREATE TABLE `sn_user_passport` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-22 13:53:46
+-- Dump completed on 2023-05-02 20:08:50

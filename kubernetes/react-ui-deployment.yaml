@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-ui
+  namespace: klv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-ui
+  template:
+    metadata:
+      labels:
+        app: react-ui
+    spec:
+      containers:
+        - name: react-ui
+          image: watisluv/klv-react-ui:react-ui
+          ports:
+            - containerPort: 80
+          env:
+            - name: API_BASE_URL
+              value: 'http://localhost:8080/api'
