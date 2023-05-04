@@ -1,14 +1,15 @@
 package com.app.springbackend.security.jwt;
 
 import com.app.springbackend.security.services.UserDetailsImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.app.springbackend.security.services.UserDetailsServiceImpl;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -25,6 +26,8 @@ import java.util.function.Function;
  */
 @Service
 public class JwtUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${klv.app.sign-key}")
     private String SIGN_KEY;
@@ -79,6 +82,10 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String generateToken(UserDetailsImpl userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
+    }
+
     public String generateToken(Authentication authentication) {
         return generateToken(new HashMap<>(), (UserDetailsImpl) authentication.getPrincipal());
     }
@@ -106,29 +113,27 @@ public class JwtUtils {
     /**
      Checks whether a given JWT token is valid for a specific user.
      @param token the JWT token to validate
-     @param userDetails the user details associated with the token
      @return true if the token is valid for the user, false otherwise.
      */
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (SignatureException e) {
+            logger.error("Invalid JWT signature: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            logger.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            logger.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims string is empty: {}", e.getMessage());
+        }
 
-    /**
-     Checks whether a given JWT token has expired.
-     @param token the JWT token to check.
-     @return true if the token has expired, false otherwise.
-     */
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    /**
-     Extracts the expiration date from a JWT token.
-     @param token the JWT token to extract the expiration date from.
-     @return the expiration date of the token.
-     */
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return false;
     }
 }

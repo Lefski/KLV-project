@@ -40,8 +40,8 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
                 put("error", "Unauthorized");
                 put("message", authException.getMessage());
                 put("path", request.getServletPath());
-                put("timestamp", new SimpleDateFormat("MM-dd-yyyy HH:mm:ss z").format(new Date()));
-                put("status", HttpServletResponse.SC_UNAUTHORIZED);
+                put("timestamp", new Date());
+                put("statusCode", HttpServletResponse.SC_UNAUTHORIZED);
             }
         };
 

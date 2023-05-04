@@ -1,12 +1,11 @@
 package com.app.springbackend.security.services;
 
-import com.app.springbackend.model.user.EUserRole;
-import com.app.springbackend.model.user.User;
-import com.app.springbackend.model.user.UserPassport;
-import com.app.springbackend.model.user.UserRole;
+import com.app.springbackend.model.user.*;
 import com.app.springbackend.payload.request.AuthenticationRequest;
 import com.app.springbackend.payload.request.RegisterRequest;
+import com.app.springbackend.payload.request.TokenRefreshRequest;
 import com.app.springbackend.payload.response.MessageResponse;
+import com.app.springbackend.payload.response.TokenRefreshResponse;
 import com.app.springbackend.payload.response.TokenResponse;
 import com.app.springbackend.repo.UserPassportRepository;
 import com.app.springbackend.repo.UserRepository;
@@ -20,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -37,6 +37,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final TokenRefreshService tokenRefreshService;
 
     public MessageResponse register(
             RegisterRequest request
@@ -125,6 +126,8 @@ public class AuthenticationService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
+        UserRefreshToken refreshToken = tokenRefreshService.createRefreshToken(userDetails.getId());
+
         return TokenResponse
                 .builder()
                 .id(userDetails.getId())
@@ -132,6 +135,7 @@ public class AuthenticationService {
                 .userEmail(userDetails.getUserEmail())
                 .roles(roles)
                 .token(jwtUtils.generateToken(authentication))
+                .refreshToken(refreshToken.getToken())
                 .type("Bearer")
                 .build();
     }

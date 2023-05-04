@@ -17,5 +17,5 @@ public class TokenResponse {
 
     private List<String> roles;
 
-    private String token, type;
+    private String token, refreshToken, type;
 }
