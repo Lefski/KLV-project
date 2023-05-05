@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "sn_jwt_refresh_token", schema = "klv_database")
+@Table(name = "sn_jwt_refresh_token", schema = "jft_database")
 public class UserRefreshToken {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

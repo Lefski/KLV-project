@@ -1,10 +1,10 @@
 package com.app.springbackend.model.user;
 
-import com.app.springbackend.model.post.Post;
+import com.app.springbackend.model.bookmark.UserBookmark;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "sn_user", schema = "klv_database")
+@Table(name = "sn_user", schema = "jft_database")
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,21 +33,6 @@ public class User {
     @Basic
     @Column(name = "user_email", nullable = false)
     private String userEmail;
-
-    @Basic
-    @Column(name = "last_login", nullable = false)
-    private Timestamp lastLogin;
-
-    @Basic
-    @Column(name = "date_joined", nullable = false)
-    private Timestamp dateJoined;
-
-    @Basic
-    @Column(name = "user_image_url")
-    private byte[] userImageUrl;
-
-    @OneToOne(mappedBy = "user")
-    private UserPassport userPassport;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "sn_user_roles",
