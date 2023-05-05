@@ -33,7 +33,7 @@ public class TokenRefreshService {
                 .builder()
                 .user(userRepository
                         .findById(userId)
-                        .orElse(null))
+                        .orElseThrow(() -> new IllegalArgumentException("Error: User not found")))
                 .token(UUID.randomUUID().toString())
                 .dateExpiration(new Timestamp(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME_IN_MILLIS))
                 .build()
@@ -50,7 +50,9 @@ public class TokenRefreshService {
     }
 
     @Transactional
-    public Long deleteByUserId(Long userId) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).orElse(null));
+    public void deleteByUserId(Long userId) {
+        refreshTokenRepository.deleteByUser(userRepository
+                .findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Error: User not found")));
     }
 }
