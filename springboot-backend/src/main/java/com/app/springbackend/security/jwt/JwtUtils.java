@@ -1,16 +1,19 @@
 package com.app.springbackend.security.jwt;
 
+import com.app.springbackend.model.user.User;
 import com.app.springbackend.security.services.UserDetailsImpl;
-import com.app.springbackend.security.services.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -34,6 +37,60 @@ public class JwtUtils {
 
     @Value("${klv.app.token-expiration-ms}")
     private Integer TOKEN_EXPIRATION_TIME_IN_MILLIS;
+
+    @Value("${klv.app.jwt-cookie-name}")
+    private String JWT_COOKIE;
+
+    @Value("${klv.app.jwt-refresh-cookie-name}")
+    private String JWT_REFRESH_COOKIE;
+
+    public ResponseCookie generateTokenCookie(UserDetailsImpl userDetails) {
+        return generateCookie(JWT_COOKIE, generateToken(userDetails), "/api");
+    }
+
+    public ResponseCookie generateTokenCookie(User user) {
+        return generateTokenCookie(UserDetailsImpl.build(user));
+    }
+
+    public ResponseCookie generateRefreshTokenCookie(String refreshToken) {
+        return generateCookie(JWT_REFRESH_COOKIE, refreshToken, "/api/auth/refresh-token");
+    }
+
+    public String getTokenFromCookies(HttpServletRequest request) {
+        return getValueFromCookies(request, JWT_COOKIE);
+    }
+
+    public String getRefreshTokenFromCookies(HttpServletRequest request) {
+        return getValueFromCookies(request, JWT_REFRESH_COOKIE);
+    }
+
+    public ResponseCookie getCleanTokenCookie() {
+        return ResponseCookie
+                .from(JWT_COOKIE, "")
+                .path("/api")
+                .build();
+    }
+
+    public ResponseCookie getCleanRefreshTokenCookie() {
+        return ResponseCookie
+                .from(JWT_REFRESH_COOKIE, "")
+                .path("/api/auth/refresh-token")
+                .build();
+    }
+
+    private ResponseCookie generateCookie(String name, String value, String path) {
+        return ResponseCookie
+                .from(name, value)
+                .path(path)
+                .maxAge(24 * 60 * 60)
+                .httpOnly(true)
+                .build();
+    }
+
+    private String getValueFromCookies(HttpServletRequest request, String name) {
+        Cookie cookie = WebUtils.getCookie(request, name);
+        return cookie != null ? cookie.getValue() : null;
+    }
 
     /**
      Extracts the username from the JWT token.
@@ -84,10 +141,6 @@ public class JwtUtils {
 
     public String generateToken(UserDetailsImpl userDetails) {
         return generateToken(new HashMap<>(), userDetails);
-    }
-
-    public String generateToken(Authentication authentication) {
-        return generateToken(new HashMap<>(), (UserDetailsImpl) authentication.getPrincipal());
     }
 
     /**
