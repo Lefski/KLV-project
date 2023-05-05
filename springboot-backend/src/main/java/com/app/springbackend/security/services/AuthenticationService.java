@@ -3,11 +3,8 @@ package com.app.springbackend.security.services;
 import com.app.springbackend.model.user.*;
 import com.app.springbackend.payload.request.AuthenticationRequest;
 import com.app.springbackend.payload.request.RegisterRequest;
-import com.app.springbackend.payload.request.TokenRefreshRequest;
 import com.app.springbackend.payload.response.MessageResponse;
-import com.app.springbackend.payload.response.TokenRefreshResponse;
 import com.app.springbackend.payload.response.TokenResponse;
-import com.app.springbackend.repo.UserPassportRepository;
 import com.app.springbackend.repo.UserRepository;
 import com.app.springbackend.repo.UserRoleRepository;
 import com.app.springbackend.security.jwt.JwtUtils;
@@ -19,10 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +27,6 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final UserPassportRepository userPassportRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
@@ -77,28 +70,10 @@ public class AuthenticationService {
                 .username(request.getUsername())
                 .userEmail(request.getUserEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .lastLogin(new Timestamp(System.currentTimeMillis()))
-                .dateJoined(new Timestamp(System.currentTimeMillis()))
-                .userImageUrl(new byte[0])
-                .posts(new HashSet<>())
                 .roles(roles)
+                .bookmarks(new HashSet<>())
                 .build();
 
-        UserPassport userPassport = UserPassport
-                .builder()
-                .userId(user.getId())
-                .birthDate(new Date(System.currentTimeMillis()))
-                .firstName(user.getUsername())
-                .lastName("")
-                .phoneNumber("")
-                .country("")
-                .zipCode("")
-                .build();
-
-        user.setUserPassport(userPassport);
-        userPassport.setUser(user);
-
-        userPassportRepository.save(userPassport);
         userRepository.save(user);
 
         return MessageResponse
