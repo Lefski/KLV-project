@@ -16,6 +16,4 @@ public class UserInfoResponse {
     private String username, userEmail;
 
     private List<String> roles;
-
-    private String token, refreshToken, type;
 }
