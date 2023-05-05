@@ -3,6 +3,7 @@ package com.app.springbackend.advice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Getter
@@ -10,6 +11,6 @@ import java.util.Date;
 public class ErrorMessage {
 
     private int statusCode;
-    private Date timestamp;
+    private Timestamp timestamp;
     private String message, description;
 }
