@@ -77,6 +77,27 @@ public class AuthenticationController {
                 .body(authenticationService.authenticate(userDetails));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!Objects.equals(principle.toString(), "anonymousUser")) {
+            tokenRefreshService.deleteByUserId(
+                    ((UserDetailsImpl) principle).getId()
+            );
+        }
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, jwtUtils.getCleanTokenCookie().toString())
+                .header(HttpHeaders.SET_COOKIE, jwtUtils.getCleanRefreshTokenCookie().toString())
+                .body(MessageResponse
+                        .builder()
+                        .message("You've been signed out")
+                        .build()
+                );
+    }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(
             @RequestBody TokenRefreshRequest request
