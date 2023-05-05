@@ -40,6 +40,7 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
-    private Set<Post> posts;
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<UserBookmark> bookmarks;
 }
