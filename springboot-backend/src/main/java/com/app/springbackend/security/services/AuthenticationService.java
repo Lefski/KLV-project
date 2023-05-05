@@ -1,19 +1,15 @@
 package com.app.springbackend.security.services;
 
-import com.app.springbackend.model.user.*;
-import com.app.springbackend.payload.request.AuthenticationRequest;
+import com.app.springbackend.model.user.EUserRole;
+import com.app.springbackend.model.user.User;
+import com.app.springbackend.model.user.UserRole;
 import com.app.springbackend.payload.request.RegisterRequest;
 import com.app.springbackend.payload.response.MessageResponse;
-import com.app.springbackend.payload.response.TokenResponse;
+import com.app.springbackend.payload.response.UserInfoResponse;
 import com.app.springbackend.repo.UserRepository;
 import com.app.springbackend.repo.UserRoleRepository;
-import com.app.springbackend.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +24,6 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtils jwtUtils;
-    private final AuthenticationManager authenticationManager;
-    private final TokenRefreshService tokenRefreshService;
 
     public MessageResponse register(
             RegisterRequest request
@@ -82,18 +75,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public TokenResponse authenticate(AuthenticationRequest request) {
-
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
-                request.getPassword()
-            )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    public UserInfoResponse authenticate(UserDetailsImpl userDetails) {
 
         List<String> roles = userDetails
                 .getAuthorities()
@@ -101,17 +83,12 @@ public class AuthenticationService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        UserRefreshToken refreshToken = tokenRefreshService.createRefreshToken(userDetails.getId());
-
-        return TokenResponse
+        return UserInfoResponse
                 .builder()
                 .id(userDetails.getId())
                 .username(userDetails.getUsername())
                 .userEmail(userDetails.getUserEmail())
                 .roles(roles)
-                .token(jwtUtils.generateToken(authentication))
-                .refreshToken(refreshToken.getToken())
-                .type("Bearer")
                 .build();
     }
 }
