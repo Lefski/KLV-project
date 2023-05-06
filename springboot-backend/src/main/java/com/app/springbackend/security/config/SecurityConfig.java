@@ -3,6 +3,7 @@ package com.app.springbackend.security.config;
 import com.app.springbackend.security.jwt.JwtAuthEntryPoint;
 import com.app.springbackend.security.jwt.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -46,7 +47,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/api/test/**") // TODO: Rework white endpoints
+                .requestMatchers("/api/auth/**", "/api/test/**", "/home") // TODO: Rework white endpoints
                 .permitAll()
                 .anyRequest()
                 .authenticated()

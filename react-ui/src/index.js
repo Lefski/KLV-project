@@ -1,16 +1,9 @@
-import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 
-import App from './app';
-
-const root = createRoot(document.getElementById('root'));
+import {App} from './App';
 
 // Entry point
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+createRoot(document.getElementById('root')).render(<App />);
 
 const devMode = process.env.NODE_ENV === 'development';
 
