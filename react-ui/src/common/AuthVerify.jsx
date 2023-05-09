@@ -1,6 +1,7 @@
 import React from 'react';
 import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
+import {getCookie} from '../utils/getCookies';
 
 const parseJwt = (token) => {
     try {
@@ -15,7 +16,7 @@ const AuthVerify = (props) => {
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (user) {
-            const decodedJwt = parseJwt(user.accessToken);
+            const decodedJwt = parseJwt();
 
             if (decodedJwt.exp * 1000 < Date.now()) {
                 props.logOut();

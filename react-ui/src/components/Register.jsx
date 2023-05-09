@@ -10,6 +10,18 @@ import {
 } from '../utils/validate';
 import {required} from '../utils/required';
 
+/**
+ * A component that provides a registration form for users to create an account.
+ * The form collects user input for username, email, and password.
+ * Upon form submission, the component attempts to register the user
+ * via the AuthService and provides feedback to the user.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @return {React.Element} The rendered Register component.
+ * @example
+ * <Register />
+ */
 export const Register = (props) => {
     const form = useRef(null);
     const checkBtn = useRef(null);

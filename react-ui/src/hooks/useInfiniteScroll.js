@@ -2,6 +2,17 @@ import {useState, useEffect} from 'react';
 import {STORY_INCREMENT, MAX_STORIES} from '../data/constants';
 import {debounce} from '../utils/debounce';
 
+/**
+ * A custom hook to implement infinite scrolling feature in a React component.
+ * It calculates the position of the scroll and increments the story count.
+ *
+ * @function
+ * @return {Object} Object that contains a count property that holds
+ * the number of stories to be shown at a time.
+ *
+ * @example
+ * const { count } = useInfiniteScroll();
+ */
 export const useInfiniteScroll = () => {
     const [loading, setLoading] = useState(false);
     const [count, setCount] = useState(STORY_INCREMENT);
@@ -14,7 +25,7 @@ export const useInfiniteScroll = () => {
         ) {
             setLoading(true);
         }
-    }, 500);
+    }, 500, true, []);
 
     useEffect(() => {
         if (!loading) return;

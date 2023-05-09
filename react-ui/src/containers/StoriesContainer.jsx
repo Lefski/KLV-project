@@ -1,11 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {getStoriesIds} from '../services/news.service';
 import {Story} from '../components/Story';
-import {StoriesContainerWrapper} from '../assets/styles/StoryContainerStyles';
+import {StoriesContainerWrapper} from '../assets/styles/StoriesContainerStyles';
 import {useInfiniteScroll} from '../hooks/useInfiniteScroll';
 import {useIntersectionObserver} from '../hooks/useIntersectionObserver';
 import {MAX_STORIES} from '../data/constants';
 
+/**
+ * A component that renders a list of stories,
+ * implementing infinite scroll functionality.
+ *
+ * @component
+ * @return {React.Element} The rendered StoriesContainer component.
+ */
 export const StoriesContainer = () => {
     const {count} = useInfiniteScroll();
     const [storiesIds, setStoriesIds] = useState([]);

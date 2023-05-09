@@ -1,3 +1,13 @@
+/**
+ * Converts a timestamp into a human-readable time difference string.
+ *
+ * @function
+ * @param {number} timestamp - The timestamp to be converted, in seconds.
+ * @return {string} A string representing the time difference between
+ * now and the provided timestamp.
+ * The string will express the time difference in terms of the largest
+ * applicable unit (e.g., years, months, days, hours, minutes, or seconds).
+ */
 export const mapTime = (timestamp) => {
     const seconds = Math.floor((new Date() - timestamp * 1000) / 1000);
 

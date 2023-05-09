@@ -1,3 +1,11 @@
+/**
+ * Retrieves the value of a specific cookie from the document's cookie string.
+ *
+ * @function
+ * @param {string} name - The name of the cookie to retrieve.
+ * @return {string|null} The value of the cookie if it exists.
+ * Otherwise, returns null.
+ */
 export const getCookie = (name) => {
     let end;
     const dc = document.cookie;

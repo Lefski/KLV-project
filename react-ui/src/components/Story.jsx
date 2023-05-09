@@ -11,6 +11,21 @@ import {mapTime} from '../mappers/mapTime';
 import {BookmarkButton} from './BookmarkButton';
 import {AuthService} from '../services/auth.service';
 
+/**
+ * A memoized component that fetches and displays a particular story.
+ * The component fetches the story data based on
+ * the passed storyId and renders the story information.
+ * The component also provides an option to bookmark
+ * the story if a user is currently authenticated.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {number} props.storyId - The id of the story to fetch and display.
+ * @return {React.Element|null} The rendered Story component
+ * or null if story data is not yet available.
+ * @example
+ * <Story storyId={12345} />
+ */
 export const Story = memo(function Story({storyId}) {
     const [story, setStory] = useState({});
 

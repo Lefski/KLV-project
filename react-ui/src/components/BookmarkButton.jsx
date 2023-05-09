@@ -5,6 +5,20 @@ import bookmarkIconFilled from '../assets/icons/bookmark_icon_filled.png';
 import {BookmarkService} from '../services/bookmark.service';
 import {useBookmarksContext} from '../contexts/useBookmarksContext';
 
+/**
+ * The BookmarkButton component is used to bookmark a story.
+ * It uses the 'useBookmarksContext' hook to provide bookmark state management.
+ * If the story is already bookmarked, it displays a filled bookmark icon,
+ * otherwise an outline.
+ * Clicking on the button toggles the bookmarked state of the story.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.story - Story object to be bookmarked
+ * @return {React.Element} The rendered BookmarkButton component.
+ * @example
+ * <BookmarkButton story={story} />
+ */
 export const BookmarkButton = ({story}) => {
     const {bookmarks, setBookmarks} = useBookmarksContext();
 

@@ -7,6 +7,17 @@ import CheckButton from 'react-validation/build/button';
 import {AuthService} from '../services/auth.service';
 import {required} from '../utils/required';
 
+/**
+ * A component that provides a login form for users to authenticate an account.
+ * The form collects user input for username and password.
+ * Upon form submission, the component attempts to authenticate the user
+ * via the AuthService and provides feedback to the user.
+ *
+ * @component
+ * @return {React.Element} The rendered Login component.
+ * @example
+ * <Login />
+ */
 export const Login = () => {
     const form = useRef(null);
     const checkBtn = useRef(null);
