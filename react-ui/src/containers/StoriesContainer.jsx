@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {getStoriesIds} from '../services/hackerNewsAPI';
+import {getStoriesIds} from '../services/news.service';
 import {Story} from '../components/Story';
-import {GlobalStyle} from '../assets/styles/ResetStyles';
 import {StoriesContainerWrapper} from '../assets/styles/StoryContainerStyles';
 import {useInfiniteScroll} from '../hooks/useInfiniteScroll';
 import {useIntersectionObserver} from '../hooks/useIntersectionObserver';
+import {MAX_STORIES} from '../data/constants';
 
 export const StoriesContainer = () => {
     const {count} = useInfiniteScroll();
     const [storiesIds, setStoriesIds] = useState([]);
-    const [loading, setLoading] = useState(false); // Add this line
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getStoriesIds().then((data) => setStoriesIds(data));
@@ -23,13 +23,14 @@ export const StoriesContainer = () => {
 
     return (
         <>
-            <GlobalStyle />
             <StoriesContainerWrapper data-test-id="stories-container">
-                <h1>The Sun News Stories</h1>
                 {storiesIds.slice(0, count).map((storyId) => (
-                    <Story key={storyId} storyId={storyId} />
+                    <Story
+                        key={storyId}
+                        storyId={storyId}
+                    />
                 ))}
-                {loading && <div>Loading...</div>}
+                {count < MAX_STORIES && loading && <div>Loading...</div>}
                 <div ref={targetRef} />
             </StoriesContainerWrapper>
         </>

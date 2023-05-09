@@ -2,7 +2,7 @@ import React from 'react';
 import {render, cleanup, waitForElement} from '@testing-library/react';
 import {App} from '../App';
 import {storiesIds, singularStory} from '../fixtures';
-import {getStory, getStoriesIds} from '../services/hackerNewsAPI';
+import {getStory, getStoriesIds} from '../services/news.service';
 import {useInfiniteScroll} from '../hooks/useInfiniteScroll';
 import {STORY_INCREMENT} from '../data/constants';
 import test, {beforeEach} from 'node:test';

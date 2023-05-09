@@ -93,4 +93,50 @@ export const GlobalStyle = createGlobalStyle`
       scroll-behavior: auto !important;
     }
   }
+
+  label {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .navbar {
+    padding: 10px 20px;
+
+    a, a:visited {
+      color: var(--bs-navbar-brand-color);
+      text-decoration: inherit;
+    }
+  }
+
+  .card-container.card {
+    max-width: 350px;
+    padding: 40px 40px;
+  }
+
+  .card {
+    background-color: #f7f7f7;
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 10px;
+    -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  form, form > div {
+    display: grid;
+    gap: 10px;
+  }
+
+  .profile-img-card {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
 `;

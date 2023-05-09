@@ -1,6 +1,6 @@
 import React, {useState, useEffect, memo} from 'react';
 import PropTypes from 'prop-types';
-import {getStory} from '../services/hackerNewsAPI';
+import {getStory} from '../services/news.service';
 import {
     StoryMeta,
     StoryMetaElement,
@@ -8,6 +8,8 @@ import {
     StoryWrapper,
 } from '../assets/styles/StoryStyles';
 import {mapTime} from '../mappers/mapTime';
+import {BookmarkButton} from './BookmarkButton';
+import {AuthService} from '../services/auth.service';
 
 export const Story = memo(function Story({storyId}) {
     const [story, setStory] = useState({});
@@ -20,6 +22,9 @@ export const Story = memo(function Story({storyId}) {
         <StoryWrapper data-testid="story">
             <StoryTitle>
                 <a href={story.url}>{story.title}</a>
+                {AuthService.getCurrentUser() &&
+                    <BookmarkButton story={story}/>
+                }
             </StoryTitle>
             <StoryMeta>
                 <span data-test-id="story-by">

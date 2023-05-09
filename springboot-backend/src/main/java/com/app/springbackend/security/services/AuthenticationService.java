@@ -29,7 +29,7 @@ public class AuthenticationService {
             RegisterRequest request
     ) {
 
-        Set<String> stringRoles = request.getRole();
+        Set<String> stringRoles = new HashSet<>();
         Set<UserRole> roles = new HashSet<>();
 
         if (stringRoles.size() == 0) {

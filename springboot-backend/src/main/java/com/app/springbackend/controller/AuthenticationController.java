@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -67,6 +66,8 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        tokenRefreshService.deleteByUserId(userDetails.getId());
 
         String refreshToken = tokenRefreshService.createRefreshToken(userDetails.getId()).getToken();
 

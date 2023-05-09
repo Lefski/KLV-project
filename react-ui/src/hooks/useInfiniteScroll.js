@@ -8,7 +8,7 @@ export const useInfiniteScroll = () => {
 
     const handleScroll = debounce(() => {
         if (
-            window.innerHeight + document.documentElement.scrollTop + 100 >=
+            window.innerHeight + document.documentElement.scrollTop + 200 >=
             document.documentElement.offsetHeight ||
             !loading
         ) {

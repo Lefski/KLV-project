@@ -21,6 +21,9 @@ export const StoryTitle = styled.h1`
   line-height: 1.8;
   text-decoration: none;
   
+  display: flex;
+  justify-content: space-between;
+  
   a {
     color: #2e2e2c;
     background-color: #f8dc3d;

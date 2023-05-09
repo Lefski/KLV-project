@@ -4,7 +4,7 @@ import {
     getStory,
     newStoriesUrl,
     storyUrl,
-} from '../services/hackerNewsAPI';
+} from '../services/news.service';
 import {singularStory, storiesIds, emptySingularStory} from '../fixtures';
 import {beforeEach, describe, it} from 'node:test';
 import jest from 'jest';
