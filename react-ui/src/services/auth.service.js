@@ -18,6 +18,7 @@ const register = (username, userEmail, password) => {
         username,
         userEmail,
         password,
+        role: ['USER'],
     });
 };
 
