@@ -1,15 +1,19 @@
 package com.app.springbackend.security.jwt;
 
+import com.app.springbackend.model.user.User;
 import com.app.springbackend.security.services.UserDetailsImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -26,11 +30,67 @@ import java.util.function.Function;
 @Service
 public class JwtUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
     @Value("${klv.app.sign-key}")
     private String SIGN_KEY;
 
     @Value("${klv.app.token-expiration-ms}")
     private Integer TOKEN_EXPIRATION_TIME_IN_MILLIS;
+
+    @Value("${klv.app.jwt-cookie-name}")
+    private String JWT_COOKIE;
+
+    @Value("${klv.app.jwt-refresh-cookie-name}")
+    private String JWT_REFRESH_COOKIE;
+
+    public ResponseCookie generateTokenCookie(UserDetailsImpl userDetails) {
+        return generateCookie(JWT_COOKIE, generateToken(userDetails), "/api");
+    }
+
+    public ResponseCookie generateTokenCookie(User user) {
+        return generateTokenCookie(UserDetailsImpl.build(user));
+    }
+
+    public ResponseCookie generateRefreshTokenCookie(String refreshToken) {
+        return generateCookie(JWT_REFRESH_COOKIE, refreshToken, "/api/auth/refresh-token");
+    }
+
+    public String getTokenFromCookies(HttpServletRequest request) {
+        return getValueFromCookies(request, JWT_COOKIE);
+    }
+
+    public String getRefreshTokenFromCookies(HttpServletRequest request) {
+        return getValueFromCookies(request, JWT_REFRESH_COOKIE);
+    }
+
+    public ResponseCookie getCleanTokenCookie() {
+        return ResponseCookie
+                .from(JWT_COOKIE, "")
+                .path("/api")
+                .build();
+    }
+
+    public ResponseCookie getCleanRefreshTokenCookie() {
+        return ResponseCookie
+                .from(JWT_REFRESH_COOKIE, "")
+                .path("/api/auth/refresh-token")
+                .build();
+    }
+
+    private ResponseCookie generateCookie(String name, String value, String path) {
+        return ResponseCookie
+                .from(name, value)
+                .path(path)
+                .maxAge(24 * 60 * 60)
+                .httpOnly(true)
+                .build();
+    }
+
+    private String getValueFromCookies(HttpServletRequest request, String name) {
+        Cookie cookie = WebUtils.getCookie(request, name);
+        return cookie != null ? cookie.getValue() : null;
+    }
 
     /**
      Extracts the username from the JWT token.
@@ -79,8 +139,8 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(Authentication authentication) {
-        return generateToken(new HashMap<>(), (UserDetailsImpl) authentication.getPrincipal());
+    public String generateToken(UserDetailsImpl userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
     }
 
     /**
@@ -106,29 +166,27 @@ public class JwtUtils {
     /**
      Checks whether a given JWT token is valid for a specific user.
      @param token the JWT token to validate
-     @param userDetails the user details associated with the token
      @return true if the token is valid for the user, false otherwise.
      */
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (SignatureException e) {
+            logger.error("Invalid JWT signature: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            logger.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            logger.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims string is empty: {}", e.getMessage());
+        }
 
-    /**
-     Checks whether a given JWT token has expired.
-     @param token the JWT token to check.
-     @return true if the token has expired, false otherwise.
-     */
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    /**
-     Extracts the expiration date from a JWT token.
-     @param token the JWT token to extract the expiration date from.
-     @return the expiration date of the token.
-     */
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return false;
     }
 }

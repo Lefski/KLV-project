@@ -32,7 +32,7 @@ module.exports = {
                 use: ['babel-loader'], // Array of loaders
             },
             { // Rule for styles modules
-                test: /\.module\.s(a|c)ss$/,
+                test: /\.module\.s[ac]ss$/,
                 exclude: /node_modules/,
                 use: [
                     production ? MiniCssExtractPlugin.loader : 'style-loader',
@@ -52,13 +52,16 @@ module.exports = {
                 ],
             },
             { // Rule for styles
-                test: /\.s(a|c)ss$/,
-                exclude: [
-                    /\.module.(s(a|c)ss)$/,
-                    /node_modules/,
-                ],
+                test: /\.(sa|c)ss$/,
+                exclude: /\.module\.s[ac]ss$/,
                 use: [
                     production ? MiniCssExtractPlugin.loader : 'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: !production,
+                        },
+                    },
                     {
                         loader: 'sass-loader',
                         options: {
@@ -67,11 +70,37 @@ module.exports = {
                     },
                 ],
             },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                use: [
+                    production ? MiniCssExtractPlugin.loader : 'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: !production,
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'assets/images/',
+                            publicPath: 'assets/images/',
+                        },
+                    },
+                ],
+            },
         ],
     },
     resolve: {
         // For importing files without writing extensions
-        extensions: ['*', '.js', '.jsx', '.scss'],
+        extensions: ['.*', '.js', '.jsx', '.scss'],
     },
     plugins: [
         new HtmlWebpackPlugin({ // Connects built JS with HTML file

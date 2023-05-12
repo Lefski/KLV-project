@@ -3,6 +3,7 @@ package com.app.springbackend.security.config;
 import com.app.springbackend.security.jwt.JwtAuthEntryPoint;
 import com.app.springbackend.security.jwt.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -49,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/api/test/**") // TODO: Rework white endpoints
                 .permitAll()
                 .anyRequest()
-                .authenticated()
+                .permitAll()
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "sn_user_role", schema = "klv_database")
+@Table(name = "sn_user_role", schema = "jft_database")
 public class UserRole {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
