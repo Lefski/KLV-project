@@ -3,7 +3,6 @@ package com.app.springbackend.security.config;
 import com.app.springbackend.security.jwt.JwtAuthEntryPoint;
 import com.app.springbackend.security.jwt.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -36,8 +35,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors()
-                .and()
                 .csrf()
                 .disable()
                 .exceptionHandling()
@@ -49,6 +46,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**", "/api/test/**") // TODO: Rework white endpoints
                 .permitAll()
+                .requestMatchers("/api/user/**")
+                .authenticated()
                 .anyRequest()
                 .permitAll()
                 .and()
