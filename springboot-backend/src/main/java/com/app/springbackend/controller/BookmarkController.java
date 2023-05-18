@@ -17,7 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class BookmarkController {
 
     private final UserBookmarkService userBookmarkService;
+    /**
 
+     Добавление закладки для пользователя.
+     @param request Запрос на добавление закладки.
+     @param userDetails Информация о пользователе.
+     @return Ответ с созданной закладкой и статусом CREATED.
+     */
     @PostMapping("/bookmarks/add")
     public ResponseEntity<?> addBookmark(
             @RequestBody AddBookmarkRequest request,
@@ -28,7 +34,13 @@ public class BookmarkController {
                 HttpStatus.CREATED
         );
     }
+    /**
 
+     Удаление закладки пользователя.
+     @param bookmarkId Идентификатор закладки.
+     @param userDetails Информация о пользователе.
+     @return Ответ с кодом статуса NO_CONTENT.
+     */
     @DeleteMapping("/bookmarks/delete/{bookmarkId}")
     public ResponseEntity<?> deleteBookmark(
             @PathVariable Long bookmarkId,
@@ -39,10 +51,15 @@ public class BookmarkController {
                 HttpStatus.NO_CONTENT
         );
     }
+    /**
 
+     Получение всех закладок пользователя.
+     @param userDetails Информация о пользователе.
+     @return Ответ с списком закладок и статусом OK.
+     */
     @GetMapping("/bookmarks")
     public ResponseEntity<?> getAllBookmarks(
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         return new ResponseEntity<>(
                 userBookmarkService.findAllByUserId(userDetails.getId()),
