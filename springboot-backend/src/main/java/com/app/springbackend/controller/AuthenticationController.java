@@ -1,6 +1,5 @@
 package com.app.springbackend.controller;
 
-
 import com.app.springbackend.exception.TokenRefreshException;
 import com.app.springbackend.model.user.UserRefreshToken;
 import com.app.springbackend.payload.request.AuthenticationRequest;
@@ -23,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
+/**
+ * Контроллер аутентификации и авторизации пользователей.
+ */
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -34,16 +36,22 @@ public class AuthenticationController {
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Регистрация нового пользователя.
+     *
+     * @param request Запрос на регистрацию.
+     * @return Ответ с результатом регистрации.
+     */
     @PostMapping("/register")
-    public ResponseEntity<?> register(
-            @RequestBody RegisterRequest request
-    ) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        // Валидация уникальности имени пользователя
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken"));
         }
 
+        // Валидация уникальности email
         if (userRepository.existsByUserEmail(request.getUserEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -53,10 +61,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
+    /**
+     * Аутентификация пользователя.
+     *
+     * @param request Запрос на аутентификацию.
+     * @return Ответ с результатом аутентификации и токенами.
+     */
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
+        // Аутентификация пользователя
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -67,8 +80,10 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+        // Удаление предыдущего refresh-токена пользователя
         tokenRefreshService.deleteByUserId(userDetails.getId());
 
+        // Создание нового refresh-токена и его включение в заголовок ответа
         String refreshToken = tokenRefreshService.createRefreshToken(userDetails.getId()).getToken();
 
         return ResponseEntity
@@ -78,6 +93,11 @@ public class AuthenticationController {
                 .body(authenticationService.authenticate(userDetails));
     }
 
+    /**
+     * Выход пользователя.
+     *
+     * @return Ответ с результатом выхода и удалением токенов.
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -99,6 +119,14 @@ public class AuthenticationController {
                 );
     }
 
+
+    /**
+     * Обновление access-токена пользователя.
+     *
+     * @param request Запрос на обновление токена.
+     * @return Ответ с результатом обновления access-токена.
+     * @throws TokenRefreshException Исключение, если refresh-токен недействителен.
+     */
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(
             @RequestBody TokenRefreshRequest request
