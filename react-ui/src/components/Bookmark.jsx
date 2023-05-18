@@ -16,29 +16,34 @@ import {BookmarkButton} from './BookmarkButton';
  * @component
  * @param {Object} props - Component props.
  * @param {Object} props.bookmark - The bookmark data to display.
- * @return {React.Element} The rendered Bookmark component.
+ * @return {JSX.Element} The rendered Bookmark component.
  * @example
  * <Bookmark bookmark={bookmarkData} />
  */
 export const Bookmark = ({bookmark}) => {
-    return <StoryWrapper data-testid="story">
-        <StoryTitle>
-            <a href={bookmark.articleUrl}>{bookmark.articleTitle}</a>
-            <BookmarkButton story={Object.create({
-                title: bookmark.articleTitle,
-                url: bookmark.articleUrl,
-            })}/>
-        </StoryTitle>
+    return (
+        <StoryWrapper data-testid="story">
+            <StoryTitle>
+                <a href={bookmark.articleUrl}>{bookmark.articleTitle}</a>
+                <BookmarkButton story={Object.create({
+                    title: bookmark.articleTitle,
+                    url: bookmark.articleUrl,
+                })}/>
+            </StoryTitle>
 
-        <StoryMeta>
-            <span data-test-id="story-time" className="story-time">
-                <StoryMetaElement color="#000" className="story-meta-element">
-                Added at:
-                </StoryMetaElement>{' '}
-                {bookmark.timestamp}
-            </span>
-        </StoryMeta>
-    </StoryWrapper>;
+            <StoryMeta>
+                <span data-test-id="story-time" className="story-time">
+                    <StoryMetaElement
+                        color="#000"
+                        className="story-meta-element"
+                    >
+                        Added at:
+                    </StoryMetaElement>{' '}
+                    {bookmark.timestamp}
+                </span>
+            </StoryMeta>
+        </StoryWrapper>
+    );
 };
 
 Bookmark.propTypes = {
