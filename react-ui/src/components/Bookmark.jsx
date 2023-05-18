@@ -29,13 +29,14 @@ export const Bookmark = ({bookmark}) => {
                 url: bookmark.articleUrl,
             })}/>
         </StoryTitle>
+
         <StoryMeta>
-                <span data-test-id="story-time">
-                    <StoryMetaElement color="#000">
-                        Added at:
-                    </StoryMetaElement> {` `}
-                    {bookmark.timestamp}
-                </span>
+            <span data-test-id="story-time" className="story-time">
+                <StoryMetaElement color="#000" className="story-meta-element">
+                Added at:
+                </StoryMetaElement>{' '}
+                {bookmark.timestamp}
+            </span>
         </StoryMeta>
     </StoryWrapper>;
 };
