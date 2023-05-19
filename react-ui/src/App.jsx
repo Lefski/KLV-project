@@ -44,7 +44,7 @@ export const App = () => {
     }, []);
 
     const logout = () => {
-        AuthService.logout();
+        AuthService.logout().then((res) => console.log(res.message));
         setShowModeratorBoard(false);
         setShowAdminBoard(false);
         setCurrentUser(undefined);
@@ -58,10 +58,10 @@ export const App = () => {
                 <div>
                     <nav className="navbar navbar-expand navbar-dark bg-dark">
                         <img
-                            src="sun-favicon-round.png"
+                            src="../src/assets/icons/sun-favicon-round.png"
                             alt="Sun Icon"
                             className="mr-2"
-                            style={{ height: '30px', paddingRight: '10px' }}
+                            style={{height: '30px', paddingRight: '10px'}}
                         />
                         <Link to={'/'} className="navbar-brand">
                             The Sun News Stories
