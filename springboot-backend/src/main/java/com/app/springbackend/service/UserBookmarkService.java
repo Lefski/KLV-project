@@ -13,6 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * Service for managing bookmarks of users.
+ * <p>
+ * Provides methods to add, delete, and retrieve bookmarks for a specific user.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserBookmarkService {
@@ -20,6 +25,13 @@ public class UserBookmarkService {
     private final UserRepository userRepository;
     private final UserBookmarkRepository userBookmarkRepository;
 
+    /**
+     * Creates a new bookmark for the specified user.
+     *
+     * @param request The {@link com.app.springbackend.payload.request.AddBookmarkRequest} containing details of the article to be bookmarked.
+     * @param userId The ID of the user for whom the bookmark is to be created.
+     * @return {@link com.app.springbackend.model.bookmark.UserBookmark} object representing the newly created bookmark.
+     */
     public UserBookmark createBookmark(
             AddBookmarkRequest request,
             Long userId
@@ -39,6 +51,13 @@ public class UserBookmarkService {
         );
     }
 
+    /**
+     * Deletes a specified bookmark for a given user.
+     *
+     * @param bookmarkId The ID of the bookmark to be deleted.
+     * @param userId The ID of the user for whom the bookmark is to be deleted.
+     * @return {@link com.app.springbackend.payload.response.MessageResponse} object containing a success message upon deletion.
+     */
     @Transactional
     public MessageResponse deleteById(Long bookmarkId, Long userId) {
 
@@ -60,6 +79,12 @@ public class UserBookmarkService {
                 .build();
     }
 
+    /**
+     * Retrieves all bookmarks for a specified user.
+     *
+     * @param userId The ID of the user for whom the bookmarks are to be retrieved.
+     * @return A List of {@link com.app.springbackend.model.bookmark.UserBookmark} objects representing all bookmarks of the user.
+     */
     public List<UserBookmark> findAllByUserId(Long userId) {
 
         User user = userRepository.findById(userId)

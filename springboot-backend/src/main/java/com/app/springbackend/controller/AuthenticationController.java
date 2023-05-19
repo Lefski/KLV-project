@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 /**
- * Контроллер аутентификации и авторизации пользователей.
+ * Controller responsible for all authentication-related operations.
+ * Handles requests to create, verify, and refresh authentication tokens for users,
+ * as well as to register, login and logout users.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -37,21 +39,19 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Регистрация нового пользователя.
+     * Handle the user registration request.
      *
-     * @param request Запрос на регистрацию.
-     * @return Ответ с результатом регистрации.
+     * @param request The {@link com.app.springbackend.payload.request.RegisterRequest} payload containing details of the user to be registered.
+     * @return {@link org.springframework.http.ResponseEntity} containing message of the registration result.
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        // Валидация уникальности имени пользователя
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken"));
         }
 
-        // Валидация уникальности email
         if (userRepository.existsByUserEmail(request.getUserEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -62,14 +62,13 @@ public class AuthenticationController {
     }
 
     /**
-     * Аутентификация пользователя.
+     * Handle the user authentication request.
      *
-     * @param request Запрос на аутентификацию.
-     * @return Ответ с результатом аутентификации и токенами.
+     * @param request The {@link com.app.springbackend.payload.request.AuthenticationRequest} payload containing the username and password of the user to be authenticated.
+     * @return {@link org.springframework.http.ResponseEntity} containing details of the authentication result including JWT tokens.
      */
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
-        // Аутентификация пользователя
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -80,10 +79,8 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        // Удаление предыдущего refresh-токена пользователя
         tokenRefreshService.deleteByUserId(userDetails.getId());
 
-        // Создание нового refresh-токена и его включение в заголовок ответа
         String refreshToken = tokenRefreshService.createRefreshToken(userDetails.getId()).getToken();
 
         return ResponseEntity
@@ -94,9 +91,9 @@ public class AuthenticationController {
     }
 
     /**
-     * Выход пользователя.
+     * Handle the user logout request.
      *
-     * @return Ответ с результатом выхода и удалением токенов.
+     * @return {@link org.springframework.http.ResponseEntity} with a message indicating the user has been successfully logged out.
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
@@ -119,13 +116,11 @@ public class AuthenticationController {
                 );
     }
 
-
     /**
-     * Обновление access-токена пользователя.
+     * Handle the refresh token request.
      *
-     * @param request Запрос на обновление токена.
-     * @return Ответ с результатом обновления access-токена.
-     * @throws TokenRefreshException Исключение, если refresh-токен недействителен.
+     * @param request The {@link com.app.springbackend.payload.request.TokenRefreshRequest} payload containing the current refresh token.
+     * @return {@link org.springframework.http.ResponseEntity} containing details of the refresh operation including a new JWT token or an error message.
      */
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(

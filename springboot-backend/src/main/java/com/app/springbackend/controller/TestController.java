@@ -2,22 +2,22 @@ package com.app.springbackend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Контроллер для тестирования доступа пользователей.
+ * Controller for testing role-based access control.
+ * Defines endpoints that can be accessed depending on user's role.
  */
 @RestController
 @RequestMapping("/api/test")
 public class TestController {
 
     /**
-     * Публичный доступ.
+     * Endpoint that can be accessed by users with the role USER, MODERATOR, or ADMIN.
      *
-     * @return Ответ с публичным контентом и статусом OK.
+     * @return {@link org.springframework.http.ResponseEntity} with "User content" message.
      */
     @GetMapping
     public ResponseEntity<String> publicAccess() {
@@ -25,9 +25,9 @@ public class TestController {
     }
 
     /**
-     * Доступ для пользователей.
+     * Endpoint that can be accessed by users with the role USER, MODERATOR, or ADMIN.
      *
-     * @return Ответ с контентом для пользователей и статусом OK.
+     * @return {@link org.springframework.http.ResponseEntity} with "User content" message.
      */
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER', 'MODERATOR', 'ADMIN')")
@@ -36,9 +36,9 @@ public class TestController {
     }
 
     /**
-     * Доступ для модераторов.
+     * Endpoint that can be accessed by users with the role MODERATOR.
      *
-     * @return Ответ с контентом для модераторов и статусом OK.
+     * @return {@link org.springframework.http.ResponseEntity} with "Moderator content" message.
      */
     @GetMapping("/moderator")
     @PreAuthorize("hasRole('MODERATOR')")
@@ -47,9 +47,9 @@ public class TestController {
     }
 
     /**
-     * Доступ для администраторов.
+     * Endpoint that can be accessed by users with the role ADMIN.
      *
-     * @return Ответ с контентом для администраторов и статусом OK.
+     * @return {@link org.springframework.http.ResponseEntity} with "Admin content" message.
      */
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")

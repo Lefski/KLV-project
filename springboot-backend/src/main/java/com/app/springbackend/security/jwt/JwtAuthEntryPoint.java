@@ -18,11 +18,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implementation of {@link org.springframework.security.web.AuthenticationEntryPoint}.
+ * <p>
+ * Used to commence an authentication scheme at the point of request processing when an authentication is required but isn't present.
+ */
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthEntryPoint.class);
 
+    /**
+     * Commences an authentication scheme. This method is automatically called when a client tries to access a secured REST resource
+     * without supplying any credentials. We should just send a 401 Unauthorized response because there is no 'login page' to redirect to.
+     * Also adds the exception message and some other details to the response.
+     *
+     * @param request that resulted in an AuthenticationException
+     * @param response so that the user agent can begin authentication
+     * @param authException that caused the invocation
+     *
+     * @throws IOException in case of an I/O error
+     * @throws ServletException in case of general servlet exception
+     */
     @Override
     public void commence(
             @NonNull HttpServletRequest request,

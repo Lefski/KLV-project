@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Handles authentication related operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -25,6 +28,15 @@ public class AuthenticationService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Registers a new user with the given request data. The request includes
+     * username, email, password, and roles. If no role is provided, the user
+     * will be assigned a default role.
+     *
+     * @param request The {@link RegisterRequest} object that includes the
+     *                information necessary to register a new user.
+     * @return {@link MessageResponse} indicating successful registration.
+     */
     public MessageResponse register(
             RegisterRequest request
     ) {
@@ -75,6 +87,13 @@ public class AuthenticationService {
                 .build();
     }
 
+    /**
+     * Generates user information based on the provided {@link UserDetailsImpl} object.
+     *
+     * @param userDetails The user details from which to generate the information.
+     * @return {@link UserInfoResponse} containing user information including id,
+     *         username, email, and roles.
+     */
     public UserInfoResponse authenticate(UserDetailsImpl userDetails) {
 
         List<String> roles = userDetails
