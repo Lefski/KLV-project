@@ -14,11 +14,11 @@ RUN ./mvnw clean package
 
 FROM openjdk:19-alpine
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash dos2unix
 
 COPY wait-for-it.sh /wait-for-it.sh
 
-RUN chmod +x /wait-for-it.sh
+RUN dos2unix /wait-for-it.sh && chmod +x /wait-for-it.sh
 
 COPY --from=build /app-server/target/*.jar app.jar
 
