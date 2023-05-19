@@ -1,0 +1,14 @@
+com.app.springbackend
+com.app.springbackend.advice
+com.app.springbackend.config
+com.app.springbackend.controller
+com.app.springbackend.exception
+com.app.springbackend.model.bookmark
+com.app.springbackend.model.user
+com.app.springbackend.payload.request
+com.app.springbackend.payload.response
+com.app.springbackend.repo
+com.app.springbackend.security.config
+com.app.springbackend.security.jwt
+com.app.springbackend.security.services
+com.app.springbackend.service

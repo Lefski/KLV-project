@@ -23,9 +23,7 @@ import java.util.function.Function;
 
 
 /**
- This class provides methods for generating, validating and extracting information from JSON Web Tokens (JWT).
- <p>
- The token's payload contains user details and any additional claims provided by the client.
+ * Provides JWT token utilities.
  */
 @Service
 public class JwtUtils {
@@ -44,6 +42,12 @@ public class JwtUtils {
     @Value("${klv.app.jwt-refresh-cookie-name}")
     private String JWT_REFRESH_COOKIE;
 
+    /**
+     * Generates a JWT token stored in a cookie for a given {@link UserDetailsImpl} object.
+     *
+     * @param userDetails {@link UserDetailsImpl} to generate a token for.
+     * @return {@link ResponseCookie} containing the JWT token.
+     */
     public ResponseCookie generateTokenCookie(UserDetailsImpl userDetails) {
         return generateCookie(JWT_COOKIE, generateToken(userDetails), "/api");
     }
@@ -56,6 +60,12 @@ public class JwtUtils {
         return generateCookie(JWT_REFRESH_COOKIE, refreshToken, "/api/auth/refresh-token");
     }
 
+    /**
+     * Retrieves a JWT token from cookies in the provided {@link HttpServletRequest}.
+     *
+     * @param request The {@link HttpServletRequest} which may include a JWT token in the cookies.
+     * @return JWT token if found in the cookies, otherwise null.
+     */
     public String getTokenFromCookies(HttpServletRequest request) {
         return getValueFromCookies(request, JWT_COOKIE);
     }

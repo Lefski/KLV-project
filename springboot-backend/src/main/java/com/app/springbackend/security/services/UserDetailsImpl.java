@@ -11,6 +11,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Custom implementation of Spring Security's {@link UserDetails}.
+ * <p>
+ * Includes the user's id, username, email, password and the list of roles assigned to the user.
+ */
 @Getter
 @EqualsAndHashCode
 @AllArgsConstructor
@@ -27,6 +32,12 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    /**
+     * Builds a {@link UserDetailsImpl} object from a {@link User} object.
+     *
+     * @param user The {@link User} object from which to build the {@link UserDetailsImpl} object.
+     * @return A {@link UserDetailsImpl} object.
+     */
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user
                 .getRoles()
