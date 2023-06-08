@@ -1,7 +1,6 @@
 import React from 'react';
-import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
-import {getCookie} from '../utils/getCookies';
+import {withRouter} from '/src/utils/withRouter';
 
 const parseJwt = (token) => {
     try {

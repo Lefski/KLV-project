@@ -14,6 +14,7 @@ import {BoardUser} from './components/BoardUser';
 import {BoardAdmin} from './components/BoardAdmin';
 import {BookmarkService} from './services/bookmark.service';
 import {BookmarksContext} from './contexts/useBookmarksContext';
+import AuthVerify from './common/AuthVerify';
 
 export const App = () => {
     const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -157,7 +158,7 @@ export const App = () => {
                         </Routes>
                     </div>
 
-                    {/* <AuthVerify logOut={logout}/> */}
+                    <AuthVerify logOut={logout}/>
                 </div>
             </BookmarksContext.Provider>
         </>
