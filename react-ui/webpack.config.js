@@ -27,7 +27,7 @@ module.exports = {
     module: {
         rules: [
             { // Rule for JS
-                test: /\.(js|jsx)$/, // Where to search
+                test: /.*\.test\.(js|jsx)$/, // Where to search
                 exclude: /node_modules/, // Where not to search
                 use: ['babel-loader'], // Array of loaders
             },
