@@ -27,8 +27,8 @@ export const StoryTitle = styled.h1`
  a {
    color: #0000f9;
    text-decoration: none;
-   background-color: none;
-   padding: 5px 0px;
+   background-color: unset;
+   padding: 5px 0;
    border-radius: 4px;
  }
 `;
@@ -50,9 +50,3 @@ export const StoryMetaElement = styled.span`
  font-weight: bold;
  color: ${(props) => props.color || 'red'};
 `;
-
-
-
-
-
-
